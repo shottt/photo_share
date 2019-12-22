@@ -17,7 +17,7 @@ class CreatePhotosTable extends Migration
             $table->bigIncrements('id');
             $table->integer('user_id');
             $table->string('title');
-            $table->string('filename');
+            $table->string('photo');
             $table->boolean('delete_flg')->default(0);
             $table->timestamps();
         });

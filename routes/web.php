@@ -11,10 +11,24 @@
 |
 */
 
+use App\Http\Controllers\PhotosController;
+
 Route::get('/', function () {
-    return view('welcome');
+    return view('auth/login');
 });
 
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+
+// Route::group(['middleware' => ['auth']], function(){
+    Route::resource('photos', 'PhotosController');
+    Route::resource('comments', 'CommentsController');
+    // Route::get('photos/create', 'PhotosController@create')->name('photos.create');
+    // Route::post('photos', 'PhotosController@store')->name('photos.store');
+
+// });
+
+
+
+
