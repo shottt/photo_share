@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Photo;
+use App\Comment;
 use Log;
 
 class PhotosController extends Controller
@@ -73,7 +74,21 @@ class PhotosController extends Controller
      */
     public function show($id)
     {
-        //
+        // GETパラメータが数字かどうかチェックする
+        if(!ctype_digit($id)){
+            return redirect('photos/index')->with('flash_message', __('Invalid operation was performed.'));
+        }
+
+        $photo = Photo::find($id);
+        $photo_id = $photo->id;
+        $comments = Comment::where('photo_id', $photo_id);
+
+        // 異常判定
+        // if(empty($photo)){
+        //     return
+        // }
+
+        return view('photos.show', compact('photo', 'comments'));
     }
 
     /**
@@ -92,11 +107,11 @@ class PhotosController extends Controller
         $photo = Photo::find($id);
 
         // 異常判定
-        if(empty($photo)){
-            return
-        }
+        // if(empty($photo)){
+        //     return
+        // }
 
-        return view('photos.edit', ['photos' => $photo]);
+        return view('photos.edit', ['photo' => $photo]);
     }
 
     /**
@@ -108,7 +123,35 @@ class PhotosController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        // バリデーション
+        $this->validate($request, Photo::$rules);
+
+        // GETパラメータが数字かどうかチェックする
+        if(!ctype_digit($id)){
+            return redirect('photos/create')->with('flash_message', __('Invalid operation was performed.'));
+        }
+
+        // post値を変数に格納
+        $title = $request->title;
+        $uploadImg = $request->file('photo');
+
+        // 更新するレコードを検索
+        $photo = Photo::find($id);
+
+        // 画像がアップロードできているか確認し、ファイル名をPhotoインスタンスのプロパティにセット
+        if($uploadImg->isValid()){
+            $filePath = $uploadImg->store('public');
+            // str_replace関数で$filePathからファイル名を取り出し、変数に格納
+            $fileName = str_replace('public/', '', $filePath);
+        }
+        // その他の値をPhotoインスタンスのプロパティにセットして保存
+        $photo->user_id = Auth::id();
+        $photo->title = $title;
+        $photo->photo = $fileName;
+        $photo->save();
+
+        // リダイレクトする（その時にsessionフラッシュにメッセージを入れる）
+        return redirect('photos/create')->with('flash_message', __('Registered.'));
     }
 
     /**
@@ -119,6 +162,13 @@ class PhotosController extends Controller
      */
     public function destroy($id)
     {
-        //
+        // GETパラメータが数字かどうかチェックする
+        if(!ctype_digit($id)){
+            return redirect('photos/create')->with('flash_message', __('Invalid operation was performed.'));
+        }
+
+        Photo::find($id)->delete();
+
+        return redirect('/photos')->with('flash_message', __('Deleted.'));
     }
 }

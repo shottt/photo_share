@@ -5,5 +5,12 @@
   "Register": "登録",
   "Registered.": "登録しました",
   "Photo List": "写真一覧",
-  "Invalid operation was performed.": ""
+  "Invalid operation was performed.": "不正な操作が行われました",
+  "Photo Updater": "編集",
+  "Photo detail": "写真詳細",
+  "comment": "コメントする",
+  "Go Edit": "編集する",
+  "Go Detail": "詳細を見る",
+  "Deleted.": "削除しました",
+  "Go Delete": "削除する"
 }

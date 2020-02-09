@@ -12,7 +12,13 @@
                 <div class="card-img">
                   <img src="{{ asset('storage/' . $photo->photo )}}" alt="">
                 </div>
-                <a href="#" class="btn btn-primary">{{ __('detail') }}</a>
+                <a href="{{ route('photos.show', $photo->id) }}" class="btn btn-primary">{{ __('Go Detail') }}</a>
+                <a href="{{ route('photos.edit', $photo->id) }}" class="btn btn-warning">{{ __('Go Edit') }}</a>
+              <form action="{{ route('photos.delete', $photo->id) }}" method="POST" class="d-inline">
+                @csrf
+                <button class="btn btn-danger" onclick='return confirm("削除しますか？");'>{{ __('Go Delete') }}</button>
+              </form>
+
               </div>
             </div>
           </div>
